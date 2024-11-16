@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonModal, AnimationController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service'; // Importa el servicio
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,11 @@ export class LoginPage {
   @ViewChild('modal', { static: false }) modal!: IonModal;
   passwordError: string | null = null;
 
-  constructor(private router: Router, private animationCtrl: AnimationController) {}
+  constructor(
+    private router: Router,
+    private animationCtrl: AnimationController,
+    private authService: AuthService // Inyecta el servicio
+  ) {}
 
   ngOnInit() {
     const loginFormElement = document.querySelector('.login-form');
@@ -34,10 +39,9 @@ export class LoginPage {
     if (form.valid) {
       const password = form.value.password;
       if (this.isPasswordValid(password)) {
-        // Redirigir a la página de combustible
-        this.router.navigate(['/combustible']);
+        this.authService.setUsername(form.value.username); // Guarda el nombre de usuario
+        this.router.navigate(['/combustible']); // Redirige a la página de combustible
       } else {
-        // Mostrar error si la contraseña no es válida
         this.passwordError = 'La contraseña debe tener al menos 4 números, 3 caracteres y 1 mayúscula.';
       }
     } else {
@@ -47,8 +51,8 @@ export class LoginPage {
 
   isPasswordValid(password: string): boolean {
     const hasUpperCase = /[A-Z]/.test(password);
-    const hasNumeric = /\d{4}/.test(password); // Al menos 4 números
-    const hasLetter = /[a-zA-Z]{3}/.test(password); // Al menos 3 letras
+    const hasNumeric = /\d{4}/.test(password);
+    const hasLetter = /[a-zA-Z]{3}/.test(password);
     const minLength = 8;
 
     return hasUpperCase && hasNumeric && hasLetter && password.length >= minLength;

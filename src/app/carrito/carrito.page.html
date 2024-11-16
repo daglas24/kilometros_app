@@ -1,0 +1,62 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Carrito</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <p>Aquí están los productos que has agregado a tu carrito.</p>
+
+  <!-- Lista de productos en el carrito -->
+  <ion-list>
+    <ion-item *ngFor="let product of cart">
+      <ion-thumbnail slot="start">
+        <img [src]="product.image" alt="Imagen del producto">
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.price | currency }}</p>
+        <p>Cantidad: {{ product.quantity }}</p>
+      </ion-label>
+
+      <!-- Botón para aumentar cantidad -->
+      <ion-button fill="outline" (click)="increaseQuantity(product)">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Botón para disminuir cantidad -->
+      <ion-button fill="outline" (click)="decreaseQuantity(product)">
+        <ion-icon name="remove-outline"></ion-icon>
+      </ion-button>
+
+      <!-- Botón para eliminar el producto -->
+      <ion-button fill="outline" color="danger" (click)="removeProduct(product)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Total del carrito -->
+  <ion-item lines="none">
+    <ion-label>Total:</ion-label>
+    <ion-text color="primary">{{ total | currency }}</ion-text>
+  </ion-item>
+
+  <!-- Botón para pagar -->
+  <ion-button expand="full" color="success" (click)="pay()">Pagar</ion-button>
+
+  <!-- Botón para volver a la tienda -->
+  <ion-button expand="full" color="primary" routerLink="/tienda">
+    <ion-icon slot="start" name="storefront-outline"></ion-icon>
+    Volver a la Tienda
+  </ion-button>
+
+  <!-- Mensaje de éxito después del pago -->
+  <ion-toast
+    *ngIf="showSuccessMessage"
+    message="¡Pago realizado con éxito!"
+    duration="2000"
+    color="success"
+    (ionToastDidDismiss)="resetSuccessMessage()"
+  ></ion-toast>
+</ion-content>

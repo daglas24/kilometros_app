@@ -3,7 +3,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": ["google.maps"] /* Agregado para incluir definiciones de Google Maps */
   },
   "files": [
     "src/main.ts",

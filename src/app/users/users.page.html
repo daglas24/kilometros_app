@@ -1,0 +1,44 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Gestión de Usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Formulario para agregar usuario -->
+  <ion-item>
+    <ion-label position="floating">Nombre</ion-label>
+    <ion-input [(ngModel)]="newUser.name"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Correo electrónico</ion-label>
+    <ion-input [(ngModel)]="newUser.email"></ion-input>
+  </ion-item>
+  <ion-button expand="full" color="primary" (click)="addUser()">Agregar Usuario</ion-button>
+
+  <!-- Lista de usuarios -->
+  <ion-list>
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        <h2>{{ user.name }}</h2>
+        <p>{{ user.email }}</p>
+      </ion-label>
+      <ion-button fill="outline" color="warning" (click)="editUser(user)">Editar</ion-button>
+      <ion-button fill="outline" color="danger" (click)="deleteUser(user.id)">Eliminar</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Formulario para editar usuario -->
+  <div *ngIf="editingUser">
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="editingUser.name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Correo electrónico</ion-label>
+      <ion-input [(ngModel)]="editingUser.email"></ion-input>
+    </ion-item>
+    <ion-button expand="full" color="success" (click)="updateUser()">Guardar Cambios</ion-button>
+    <ion-button expand="full" color="medium" (click)="cancelEdit()">Cancelar</ion-button>
+  </div>
+</ion-content>

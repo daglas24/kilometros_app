@@ -1,0 +1,62 @@
+/* Personalización de los botones 'Añadir al carrito' */
+ion-button.add-to-cart {
+  --background: #509453; /* Color de fondo predeterminado (azul) */
+  --color: rgb(0, 98, 245); /* Color del texto */
+  --border-radius: 8px; /* Bordes redondeados */
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --height: 50px;
+  --font-weight: bold;
+  --box-shadow: 0 4px 6px rgba(8, 224, 159, 0.2); /* Sombra sutil */
+  transition: all 0.3s ease;
+}
+
+/* Efectos al pasar el cursor sobre el botón */
+ion-button.add-to-cart:hover {
+  --background: #2a7cda; /* Cambio de color al pasar el ratón (azul más oscuro) */
+  --color: white; /* Color del texto sigue siendo blanco */
+}
+
+/* Efectos al presionar el botón */
+ion-button.add-to-cart:active {
+  --background: #1e5db8; /* Cambio de color cuando se presiona el botón */
+  --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más pequeña cuando se presiona */
+  transform: scale(0.95); /* Efecto de reducción al hacer clic */
+}
+
+/* Espaciado entre el icono y el texto en el botón */
+ion-button.add-to-cart ion-icon {
+  margin-right: 10px;
+}
+
+/* Cambio de color y animación del icono cuando se pasa el cursor sobre él */
+ion-button.add-to-cart ion-icon:hover {
+  color: #fff; /* Asegura que el ícono se vea bien sobre el fondo */
+  transform: rotate(10deg); /* Pequeño giro al pasar el cursor */
+  transition: transform 0.2s ease;
+}
+
+/* Estilo para el avatar de perfil */
+ion-avatar {
+  width: 40px; /* Tamaño del avatar */
+  height: 40px; /* Tamaño del avatar */
+  border-radius: 50%; /* Bordes redondeados para hacerlo circular */
+  border: 2px solid rgba(255, 255, 255, 0.8); /* Borde sutil */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave alrededor */
+  overflow: hidden; /* Asegura que la imagen no se desborde */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Sombra más profunda en el avatar al pasar el cursor */
+ion-avatar:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más profunda */
+}
+
+ion-avatar img {
+  width: 100%; /* Asegura que la imagen ocupe todo el espacio del avatar */
+  height: 100%; /* Asegura que la imagen ocupe todo el espacio del avatar */
+  object-fit: cover; /* Hace que la imagen cubra el área sin deformarse */
+}

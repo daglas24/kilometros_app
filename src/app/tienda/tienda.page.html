@@ -1,0 +1,66 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Tienda</ion-title>
+    <ion-avatar slot="start">
+      <img src="assets/img/perfil_logo.png" alt="Logo de perfil">
+    </ion-avatar>
+    <ion-label class="user-name">{{ username }}</ion-label>
+
+    <ion-button fill="clear" color="dark" slot="end" routerLink="/carrito">
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Primer Card -->
+  <ion-card>
+    <img alt="Imagen del producto" src="assets/img/diesel.png" />
+    <ion-card-header>
+      <ion-card-title>Diesel $4.100</ion-card-title>
+      <ion-card-subtitle>Premiun Litro 1</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Diesel de alta calidad, ideal para vehículos y equipos industriales. Nuestro diesel garantiza un rendimiento potente y eficiente, cuidando los motores y maximizando su durabilidad. Con una combustión limpia y segura, es la elección confiable para quienes buscan calidad y eficiencia en cada litro. ¡Potencia que se nota en cada recorrido!
+    </ion-card-content>
+  </ion-card>
+  <ion-button expand="full" class="add-to-cart" (click)="addToCart('Diesel', 4100, 'assets/img/diesel.png')">
+    <ion-icon slot="start" name="cart-outline"></ion-icon>
+    Añadir al carrito
+  </ion-button>
+  <!-- Segundo Card -->
+  <ion-card>
+    <img alt="Imagen del producto" src="assets/img/lpg.jpg" />
+    <ion-card-header>
+      <ion-card-title>LPG $800</ion-card-title>
+      <ion-card-subtitle>Premiun Litro 1</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      LPG (Gas Licuado de Petróleo) de primera calidad, perfecto para el hogar y negocios. Nuestro LPG garantiza una combustión limpia y eficiente, ideal para cocinar, calentar o como fuente de energía confiable. Con cada carga, obtienes un rendimiento duradero y seguro, ayudando a reducir costos y a cuidar el medio ambiente. ¡Energía confiable para cada día!
+    </ion-card-content>
+  </ion-card>
+  <ion-button expand="full" class="add-to-cart" (click)="addToCart('LPG', 800, 'assets/img/lpg.jpg')">
+    <ion-icon slot="start" name="cart-outline"></ion-icon>
+    Añadir al carrito
+  </ion-button>
+
+  <!-- Tercer Card -->
+  <ion-card>
+    <img alt="Imagen del producto" src="assets/img/propano.png" />
+    <ion-card-header>
+      <ion-card-title>Propano $900</ion-card-title>
+      <ion-card-subtitle>Premiun Litro 1</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      Propano de alta pureza, perfecto para el hogar y el uso industrial. Nuestro propano ofrece una combustión limpia y eficiente, ideal para calefacción, cocina y generadores. Es una fuente de energía confiable y económica que brinda calor y potencia con seguridad. ¡Elige propano para una energía que se adapta a tus necesidades diarias!
+    </ion-card-content>
+  </ion-card>
+  <ion-button expand="full" class="add-to-cart" (click)="addToCart('Propano', 900, 'assets/img/propano.png')">
+    <ion-icon slot="start" name="cart-outline"></ion-icon>
+    Añadir al carrito
+  </ion-button>
+
+<ion-button expand="full" color="secondary" routerLink="/inicio">
+  <ion-icon slot="start" name="home-outline"></ion-icon>
+  Ir a Inicio
+</ion-button>

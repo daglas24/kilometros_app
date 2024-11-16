@@ -24,3 +24,32 @@
     font-weight: bold;
   }
   
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+.custom-button {
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #42a5f5, #478ed1);
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.custom-button:hover {
+  background: linear-gradient(135deg, #478ed1, #42a5f5);
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.custom-button:active {
+  transform: translateY(0);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}

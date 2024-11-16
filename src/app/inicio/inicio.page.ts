@@ -1,5 +1,6 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { GoogleMap } from '@capacitor/google-maps';
 
 export interface PeriodicElement {
   name: string;
@@ -18,7 +19,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   { position: 7, name: 'Hydrogen', weight: 2500, symbol: 'H2' },
   { position: 8, name: 'Biodiesel', weight: 1200, symbol: 'BD' },
   { position: 9, name: 'Methanol', weight: 1400, symbol: 'MEOH' },
-  { position: 10, name: 'Propane', weight: 900, symbol: 'PROP' },
+  { position: 10, name: 'Propano', weight: 900, symbol: 'PROP' },
 ];
 
 @Component({
@@ -26,13 +27,42 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
 })
-export class InicioPage {
+export class InicioPage implements AfterViewInit {
   @ViewChild('videoPlayer', { static: false }) videoPlayer!: ElementRef<HTMLVideoElement>;
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  constructor() { }
+  map!: GoogleMap;
+
+  constructor() {}
+
+  async ngAfterViewInit() {
+    // Inicializar Google Maps
+    const mapElement = document.getElementById('map') as HTMLElement;
+
+    this.map = await GoogleMap.create({
+      id: 'map-inicio', // ID único para el mapa
+      element: mapElement,
+      apiKey: 'AIzaSyD2oi1kGOVTlBuWkiU6C_Mw_8vlFa02Jc8',
+      config: {
+        center: {
+          lat: 37.7749, 
+          lng: -122.4194, 
+        },
+        zoom: 10,
+      },
+    });
+
+    // Añadir un marcador
+    await this.map.addMarkers([
+      {
+        coordinate: { lat: 37.7749, lng: -122.4194 },
+        title: 'San Francisco',
+        snippet: 'Bienvenido a San Francisco',
+      },
+    ]);
+  }
 
   play() {
     if (this.videoPlayer && this.videoPlayer.nativeElement) {

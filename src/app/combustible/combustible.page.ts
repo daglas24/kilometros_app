@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service'; // Importa el servicio
 
 @Component({
   selector: 'app-combustible',
@@ -9,12 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CombustiblePage implements OnInit {
   username: string = '';
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.username = params['username'] || 'Invitado';
-    });
+    this.username = this.authService.getUsername() || 'Invitado'; // Obtén el nombre de usuario
   }
 
   goToInicio() {

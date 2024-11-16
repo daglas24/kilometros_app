@@ -1,8 +1,6 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -22,18 +20,16 @@ $app-theme: mat.define-theme((
 ));
 
 // Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
 :root {
   @include mat.all-component-themes($app-theme);
 }
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
-// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
 // @include mat.typography-hierarchy($app-theme);
 
 // Comment out the line below if you want to use the deprecated `color` inputs.
 // @include mat.color-variants-backwards-compatibility($app-theme);
+
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -41,8 +37,6 @@ $app-theme: mat.define-theme((
  * the entire app and not just one component. Additionally, this file can be
  * used as an entry point to import other CSS/Sass files to be included in the
  * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -61,15 +55,7 @@ $app-theme: mat.define-theme((
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+/* Dark Mode */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
 html, body { height: 100%; }

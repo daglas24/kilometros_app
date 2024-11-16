@@ -23,6 +23,26 @@ const routes: Routes = [
     path: 'inicio',
     loadChildren: () => import('./inicio/inicio.module').then( m => m.InicioPageModule)
   },
+  {
+    path: 'tienda',
+    loadChildren: () => import('./tienda/tienda.module').then( m => m.TiendaPageModule)
+  },
+  {
+    path: 'carrito',
+    loadChildren: () => import('./carrito/carrito.module').then( m => m.CarritoPageModule)
+  },
+  {
+    path: 'users',
+    loadChildren: () => import('./users/users.module').then( m => m.UsersPageModule)
+  },
+  {
+    path: 'notfound',
+    loadChildren: () => import('./notfound/notfound.module').then( m => m.NotfoundPageModule)
+  },
+  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+  { path: 'inicio', loadChildren: () => import('./inicio/inicio.module').then(m => m.InicioPageModule) },
+  { path: 'notfound', loadChildren: () => import('./notfound/notfound.module').then(m => m.NotfoundPageModule) },
+  { path: '**', redirectTo: '/notfound' } // Manejo de rutas inexistentes
 ];
 
 @NgModule({

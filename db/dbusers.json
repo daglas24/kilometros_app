@@ -1,0 +1,11 @@
+{
+    "users": [
+      {
+        "id": 3,
+        "nombre": "Camilo González",
+        "email": "camilo@example.com",
+        "password": "password123"
+      }
+    ]
+  }
+  

@@ -48,17 +48,6 @@
       ></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Confirmar contraseña</ion-label>
-      <ion-input 
-        type="password" 
-        name="confirmPassword" 
-        placeholder="Confirma tu contraseña" 
-        required 
-        ngModel
-      ></ion-input>
-    </ion-item>
-
     <!-- Mensaje de error si algún campo no es válido -->
     <ion-item *ngIf="userForm.form.invalid && userForm.form.dirty" color="danger">
       <ion-label>Todos los campos son obligatorios y la contraseña debe tener al menos 4 caracteres. Asegúrate de que el correo electrónico sea válido.</ion-label>

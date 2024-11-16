@@ -1,7 +1,7 @@
 {
   "name": "KilometrosAPP",
   "integrations": {
-    "capacitor": {}
+    "": {}
   },
   "type": "angular"
 }
