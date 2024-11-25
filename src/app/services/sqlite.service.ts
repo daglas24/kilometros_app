@@ -1,124 +1,100 @@
 import { Injectable } from '@angular/core';
 import { CapacitorSQLite, SQLiteDBConnection } from '@capacitor-community/sqlite';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class SqliteService {
-  private db: any = null;  // Usa 'any' temporalmente para evitar problemas de tipo
+export class SQLiteService {
+  private db: SQLiteDBConnection | null = null;
+  private readonly dbName = 'app_database';
 
-  constructor() { 
-    this.init();
-  }
+  constructor() {}
 
-  init(){
-    this.createDatabase();
-  }
+  async initializeDatabase() {
+    if (Capacitor.isNativePlatform()) {
+      const sqlite = CapacitorSQLite;
 
-  // Crear y abrir la base de datos
-  async createDatabase(): Promise<void> {
-    try {
-      // Crear una conexión a la base de datos
-      const connection = await CapacitorSQLite.createConnection({
-        database: 'users.db',
-        version: 1,
-        encrypted: false,
-        mode: 'no-encryption',
-      });
+      try {
+        const connection = (await sqlite.createConnection({
+          database: this.dbName,
+          encrypted: false,
+          mode: 'no-encryption',
+          version: 1,
+        })) as unknown as SQLiteDBConnection;
 
-        this.db = connection;  // Asigna la conexión correctamente
+        if (connection) {
+          this.db = connection;
+          await this.db.open();
 
-        // Abrir la base de datos
-        await this.db.open();
-
-        // Crear la tabla de usuarios si no existe
-        await this.db.execute(`
-          CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-          )
-        `);
-    } catch (e) {
-      console.error('Error creating database:', e);
+          const query = `
+            CREATE TABLE IF NOT EXISTS users (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT NOT NULL,
+              rut INTEGER NOT NULL,
+              username TEXT NOT NULL,
+              email TEXT NOT NULL,
+              password TEXT NOT NULL
+            );
+          `;
+          await this.db.execute(query);
+        } else {
+          throw new Error('No se pudo crear la conexión a la base de datos.');
+        }
+      } catch (error) {
+        console.error('Error al inicializar la base de datos:', error);
+        throw error;
+      }
+    } else {
+      console.warn('SQLite solo está disponible en plataformas nativas.');
     }
   }
 
-  // Crear un nuevo usuario
-  async createUser(name: string, email: string, password: string): Promise<void> {
-    if (!this.db) {
-      console.error('Database not initialized');
-      return;
-    }
-    try {
-      // Asegúrate de que la conexión esté activa antes de ejecutar la consulta
-      await this.db.execute(`
-        INSERT INTO users (name, email, password)
-        VALUES (?, ?, ?)
-      `, [name, email, password]);
-
-      console.log('User created');
-    } catch (e) {
-      console.error('Error creating user:', e);
-    }
+  async addUser(user: { name: string; rut: number; username: string; email: string; password: string }) {
+    if (!this.db) throw new Error('Database not initialized.');
+    const query = `
+      INSERT INTO users (name, rut, username, email, password) 
+      VALUES (?, ?, ?, ?, ?);
+    `;
+    await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password]);
   }
 
-  // Obtener todos los usuarios
-  async getUsers(): Promise<any[]> {
-    if (!this.db) {
-      console.error('Database not initialized');
-      return [];
-    }
-    try {
-      // Asegúrate de que la conexión esté activa antes de ejecutar la consulta
-      const result = await this.db.query('SELECT * FROM users');
-      return result.values;
-    } catch (e) {
-      console.error('Error getting users:', e);
-      return [];
-    }
+  async getUsers() {
+    if (!this.db) throw new Error('Database not initialized.');
+    const query = 'SELECT * FROM users;';
+    const result = await this.db.query(query);
+    return result.values || [];
   }
 
-  // Actualizar un usuario
-  async updateUser(id: number, name: string, email: string, password: string): Promise<void> {
-    if (!this.db) {
-      console.error('Database not initialized');
-      return;
-    }
-    try {
-      await this.db.execute(`
-        UPDATE users
-        SET name = ?, email = ?, password = ?
-        WHERE id = ?
-      `, [name, email, password, id]);
-
-      console.log('User updated');
-    } catch (e) {
-      console.error('Error updating user:', e);
-    }
+  async updateUser(user: { id: number; name: string; rut: number; username: string; email: string; password: string }) {
+    if (!this.db) throw new Error('Database not initialized.');
+    const query = `
+      UPDATE users 
+      SET name = ?, rut = ?, username = ?, email = ?, password = ? 
+      WHERE id = ?;
+    `;
+    await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password, user.id]);
   }
 
-  // Eliminar un usuario
-  async deleteUser(id: number): Promise<void> {
-    if (!this.db) {
-      console.error('Database not initialized');
-      return;
-    }
-    try {
-      await this.db.execute('DELETE FROM users WHERE id = ?', [id]);
-
-      console.log('User deleted');
-    } catch (e) {
-      console.error('Error deleting user:', e);
-    }
+  async deleteUser(userId: number) {
+    if (!this.db) throw new Error('Database not initialized.');
+    const query = 'DELETE FROM users WHERE id = ?;';
+    await this.db.run(query, [userId]);
   }
 
-  // Cerrar la base de datos
-  async closeDatabase(): Promise<void> {
-    if (this.db) {
-      await this.db.close();
-      console.log('Database closed');
+  async syncWithJSON(jsonData: any) {
+    if (!this.db) throw new Error('Database not initialized.');
+
+    await this.db.execute('DELETE FROM users;');
+
+    for (const user of jsonData) {
+      const query = `
+        INSERT INTO users (name, rut, username, email, password) 
+        VALUES (?, ?, ?, ?, ?);
+      `;
+      await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password]);
     }
+
+    console.log('Sincronización con JSON completada');
   }
 }

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SqliteService } from '../services/sqlite.service';
-import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service'; // Importa el servicio
+import { Router } from '@angular/router'; // Importar Router para la navegación
+import { SQLiteService } from '../services/sqlite.service';
 
 @Component({
   selector: 'app-home',
@@ -10,59 +8,51 @@ import { AuthService } from '../services/auth.service'; // Importa el servicio
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  constructor(private sqliteService: SQLiteService, private router: Router) {}
 
-  users: any[] = [];
-  newUserName: string = '';
-  newUserEmail: string = '';
-  newUserPassword: string = '';
+  async ngOnInit() {
+    try {
+      // Inicializar la base de datos
+      await this.sqliteService.initializeDatabase();
 
-  constructor(private sqliteService: SqliteService, private router: Router, private authService: AuthService) { }
+      // Datos de ejemplo en JSON
+      const jsonData = [
+        { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
+        { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
+      ];
 
-  ngOnInit() {
-    this.initializeDatabase();
+      // Sincronizar con el JSON
+      await this.sqliteService.syncWithJSON(jsonData);
+    } catch (error) {
+      console.error('Error al inicializar la base de datos:', error);
+    }
   }
 
-  // Inicializar la base de datos
-  async initializeDatabase() {
-    await this.sqliteService.createDatabase();
-    this.loadUsers();
-  }
-
-  // Cargar los usuarios desde la base de datos
-  async loadUsers() {
-    this.users = await this.sqliteService.getUsers();
-  }
-
-  // Crear un nuevo usuario
-  async createUser() {
-    await this.sqliteService.createUser(this.newUserName, this.newUserEmail, this.newUserPassword);
-    this.loadUsers(); // Recargar usuarios
-  }
-
-  // Eliminar un usuario
-  async deleteUser(id: number) {
-    await this.sqliteService.deleteUser(id);
-    this.loadUsers(); // Recargar usuarios
-  }
-
-  // Actualizar un usuario
-  async updateUser(id: number) {
-    await this.sqliteService.updateUser(id, this.newUserName, this.newUserEmail, this.newUserPassword);
-    this.loadUsers(); // Recargar usuarios
-  }
-
-  // Cerrar la base de datos
-  async closeDatabase() {
-    await this.sqliteService.closeDatabase();
-  }
-
-  
-  onSubmit(form: NgForm) {
+  // Manejo del envío del formulario
+  async onSubmit(form: any) {
     if (form.valid) {
-      this.authService.setUsername(form.value.username); // Guarda el nombre de usuario
-      this.router.navigate(['/combustible']); // Redirige a la página de combustible
+      try {
+        const { name, rut, username, email, password } = form.value;
+
+        // Agregar el usuario a la base de datos
+        await this.sqliteService.addUser({
+          name,
+          rut,
+          username,
+          email,
+          password,
+        });
+
+        console.log('Usuario agregado:', form.value);
+
+        // Redirigir a la página combustible
+        this.router.navigate(['/combustible']);
+      } catch (error) {
+        console.error('Error al agregar usuario:', error);
+      }
+      form.reset(); // Limpia el formulario después de enviarlo
     } else {
-      console.log('Formulario no válido');
+      console.error('Formulario inválido. Revisa los campos.');
     }
   }
 }

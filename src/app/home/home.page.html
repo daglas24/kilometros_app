@@ -16,7 +16,13 @@
 
     <ion-item>
       <ion-label position="floating">RUT</ion-label>
-      <ion-input type="number" name="rut" placeholder="Ingresa tu rut sin dígito verificador" required ngModel></ion-input>
+      <ion-input
+        type="number"
+        name="rut"
+        placeholder="Ingresa tu rut sin dígito verificador"
+        required
+        ngModel
+      ></ion-input>
     </ion-item>
 
     <ion-item>
@@ -26,31 +32,27 @@
 
     <ion-item>
       <ion-label position="floating">Correo electrónico</ion-label>
-      <ion-input 
-        type="email" 
-        name="email" 
-        placeholder="Ingresa correo electrónico" 
-        required 
-        ngModel 
-        email
-      ></ion-input>
+      <ion-input type="email" name="email" placeholder="Ingresa correo electrónico" required ngModel></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Contraseña</ion-label>
-      <ion-input 
-        type="password" 
-        name="password" 
-        placeholder="Ingresa contraseña (mínimo 4 caracteres)" 
-        required 
-        minlength="4" 
+      <ion-input
+        type="password"
+        name="password"
+        placeholder="Ingresa contraseña (mínimo 4 caracteres)"
+        required
+        minlength="4"
         ngModel
       ></ion-input>
     </ion-item>
 
     <!-- Mensaje de error si algún campo no es válido -->
     <ion-item *ngIf="userForm.form.invalid && userForm.form.dirty" color="danger">
-      <ion-label>Todos los campos son obligatorios y la contraseña debe tener al menos 4 caracteres. Asegúrate de que el correo electrónico sea válido.</ion-label>
+      <ion-label
+        >Todos los campos son obligatorios y la contraseña debe tener al menos 4
+        caracteres. Asegúrate de que el correo electrónico sea válido.</ion-label
+      >
     </ion-item>
 
     <!-- Botón de crear cuenta deshabilitado hasta que el formulario sea válido -->
