@@ -19,7 +19,6 @@ export class HomePage implements OnInit {
     }
   }
 
-  // Manejo del envío del formulario
   async onSubmit(form: any) {
     if (form.valid) {
       try {
@@ -40,8 +39,9 @@ export class HomePage implements OnInit {
         this.router.navigate(['/combustible']);
       } catch (error) {
         console.error('Error al agregar usuario:', error);
+        alert('Error al registrar el usuario. Intente de nuevo.');
       }
-      form.reset(); // Limpia el formulario después de enviarlo
+      form.reset();
     } else {
       console.error('Formulario inválido. Revisa los campos.');
     }

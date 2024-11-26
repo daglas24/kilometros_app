@@ -1,7 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonModal, AnimationController } from '@ionic/angular';
 import { SQLiteService } from '../services/sqlite.service';
 
 @Component({
@@ -10,42 +9,22 @@ import { SQLiteService } from '../services/sqlite.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  @ViewChild('modal', { static: false }) modal!: IonModal;
   passwordError: string | null = null;
 
-  constructor(
-    private router: Router,
-    private animationCtrl: AnimationController,
-    private sqliteService: SQLiteService
-  ) {}
-
-  ngOnInit() {
-    const loginFormElement = document.querySelector('.login-form');
-    if (loginFormElement) {
-      const loginFormAnimation = this.animationCtrl
-        .create()
-        .addElement(loginFormElement)
-        .duration(500)
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'translateY(-100px)' },
-          { offset: 1, opacity: '1', transform: 'translateY(0)' },
-        ]);
-
-      loginFormAnimation.play();
-    }
-  }
+  constructor(private router: Router, private sqliteService: SQLiteService) {}
 
   async onSubmit(form: NgForm) {
     if (form.valid) {
       const { username, password } = form.value;
 
       try {
-        // Autenticar al usuario
         const isAuthenticated = await this.sqliteService.authenticateUser(username, password);
 
         if (isAuthenticated) {
-          this.router.navigate(['/combustible']); // Redirige si las credenciales son correctas
+          // Redirige al usuario a la página de combustible
+          this.router.navigate(['/combustible']);
         } else {
+          // Muestra un mensaje de error si las credenciales son incorrectas
           this.passwordError = 'Credenciales incorrectas. Verifica tu usuario y contraseña.';
         }
       } catch (error) {
@@ -57,7 +36,11 @@ export class LoginPage {
     }
   }
 
+  // Método para cerrar el modal
   closeModal() {
-    this.modal.dismiss();
+    const modal = document.querySelector('ion-modal');
+    if (modal) {
+      modal.dismiss();
+    }
   }
 }

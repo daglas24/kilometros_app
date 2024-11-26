@@ -47,7 +47,6 @@
       ></ion-input>
     </ion-item>
 
-    <!-- Mensaje de error si algún campo no es válido -->
     <ion-item *ngIf="userForm.form.invalid && userForm.form.dirty" color="danger">
       <ion-label
         >Todos los campos son obligatorios y la contraseña debe tener al menos 4
@@ -55,7 +54,6 @@
       >
     </ion-item>
 
-    <!-- Botón de crear cuenta deshabilitado hasta que el formulario sea válido -->
     <ion-button expand="full" type="submit" [disabled]="!userForm.form.valid">Crear</ion-button>
   </form>
 </ion-content>

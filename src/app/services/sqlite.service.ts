@@ -50,13 +50,6 @@ export class SQLiteService {
     }
   }
 
-  async closeDatabase() {
-    if (this.db) {
-      await this.db.close();
-      this.db = null;
-    }
-  }
-
   async addUser(user: { name: string; rut: number; username: string; email: string; password: string }) {
     if (!this.db) throw new Error('Database not initialized.');
     const query = `
@@ -64,13 +57,6 @@ export class SQLiteService {
       VALUES (?, ?, ?, ?, ?);
     `;
     await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password]);
-  }
-
-  async getUsers() {
-    if (!this.db) throw new Error('Database not initialized.');
-    const query = 'SELECT * FROM users;';
-    const result = await this.db.query(query);
-    return result.values || [];
   }
 
   async authenticateUser(usernameOrEmail: string, password: string): Promise<boolean> {
