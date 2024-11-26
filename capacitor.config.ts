@@ -1,4 +1,6 @@
 import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorSQLite } from '@capacitor-community/sqlite';
+
 
 const config: CapacitorConfig = {
   appId: "com.example.app",
