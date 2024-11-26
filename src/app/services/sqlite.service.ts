@@ -32,8 +32,8 @@ export class SQLiteService {
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT NOT NULL,
               rut INTEGER NOT NULL,
-              username TEXT NOT NULL,
-              email TEXT NOT NULL,
+              username TEXT NOT NULL UNIQUE,
+              email TEXT NOT NULL UNIQUE,
               password TEXT NOT NULL
             );
           `;
@@ -47,6 +47,13 @@ export class SQLiteService {
       }
     } else {
       console.warn('SQLite solo está disponible en plataformas nativas.');
+    }
+  }
+
+  async closeDatabase() {
+    if (this.db) {
+      await this.db.close();
+      this.db = null;
     }
   }
 
@@ -66,35 +73,12 @@ export class SQLiteService {
     return result.values || [];
   }
 
-  async updateUser(user: { id: number; name: string; rut: number; username: string; email: string; password: string }) {
+  async authenticateUser(usernameOrEmail: string, password: string): Promise<boolean> {
     if (!this.db) throw new Error('Database not initialized.');
     const query = `
-      UPDATE users 
-      SET name = ?, rut = ?, username = ?, email = ?, password = ? 
-      WHERE id = ?;
+      SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?;
     `;
-    await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password, user.id]);
-  }
-
-  async deleteUser(userId: number) {
-    if (!this.db) throw new Error('Database not initialized.');
-    const query = 'DELETE FROM users WHERE id = ?;';
-    await this.db.run(query, [userId]);
-  }
-
-  async syncWithJSON(jsonData: any) {
-    if (!this.db) throw new Error('Database not initialized.');
-
-    await this.db.execute('DELETE FROM users;');
-
-    for (const user of jsonData) {
-      const query = `
-        INSERT INTO users (name, rut, username, email, password) 
-        VALUES (?, ?, ?, ?, ?);
-      `;
-      await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password]);
-    }
-
-    console.log('Sincronización con JSON completada');
+    const result = await this.db.query(query, [usernameOrEmail, usernameOrEmail, password]);
+    return Array.isArray(result.values) && result.values.length > 0;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; // Importar Router para la navegación
+import { Router } from '@angular/router';
 import { SQLiteService } from '../services/sqlite.service';
 
 @Component({
@@ -14,15 +14,6 @@ export class HomePage implements OnInit {
     try {
       // Inicializar la base de datos
       await this.sqliteService.initializeDatabase();
-
-      // Datos de ejemplo en JSON
-      const jsonData = [
-        { id: 1, name: 'John Doe', email: 'john.doe@example.com' },
-        { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com' },
-      ];
-
-      // Sincronizar con el JSON
-      await this.sqliteService.syncWithJSON(jsonData);
     } catch (error) {
       console.error('Error al inicializar la base de datos:', error);
     }

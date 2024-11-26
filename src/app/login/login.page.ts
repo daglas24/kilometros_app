@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonModal, AnimationController } from '@ionic/angular';
-import { AuthService } from '../services/auth.service'; // Importa el servicio
+import { SQLiteService } from '../services/sqlite.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginPage {
   constructor(
     private router: Router,
     private animationCtrl: AnimationController,
-    private authService: AuthService // Inyecta el servicio
+    private sqliteService: SQLiteService
   ) {}
 
   ngOnInit() {
@@ -35,27 +35,26 @@ export class LoginPage {
     }
   }
 
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     if (form.valid) {
-      const password = form.value.password;
-      if (this.isPasswordValid(password)) {
-        this.authService.setUsername(form.value.username); // Guarda el nombre de usuario
-        this.router.navigate(['/combustible']); // Redirige a la página de combustible
-      } else {
-        this.passwordError = 'La contraseña debe tener al menos 4 números, 3 caracteres y 1 mayúscula.';
+      const { username, password } = form.value;
+
+      try {
+        // Autenticar al usuario
+        const isAuthenticated = await this.sqliteService.authenticateUser(username, password);
+
+        if (isAuthenticated) {
+          this.router.navigate(['/combustible']); // Redirige si las credenciales son correctas
+        } else {
+          this.passwordError = 'Credenciales incorrectas. Verifica tu usuario y contraseña.';
+        }
+      } catch (error) {
+        console.error('Error al autenticar usuario:', error);
+        this.passwordError = 'Ocurrió un error al iniciar sesión. Intenta de nuevo.';
       }
     } else {
       console.log('Formulario no válido');
     }
-  }
-
-  isPasswordValid(password: string): boolean {
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasNumeric = /\d{4}/.test(password);
-    const hasLetter = /[a-zA-Z]{3}/.test(password);
-    const minLength = 8;
-
-    return hasUpperCase && hasNumeric && hasLetter && password.length >= minLength;
   }
 
   closeModal() {

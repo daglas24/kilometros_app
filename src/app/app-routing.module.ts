@@ -43,11 +43,6 @@ const routes: Routes = [
       import('./notfound/notfound.module').then((m) => m.NotfoundPageModule),
   },
   {
-    path: 'crud',
-    loadChildren: () =>
-      import('./crud/crud.module').then((m) => m.CrudPageModule),
-  },
-  {
     path: '**', // Manejo de rutas inexistentes
     redirectTo: 'notfound',
   },
