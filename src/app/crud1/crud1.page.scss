@@ -1,0 +1,32 @@
+ion-card {
+    margin: 20px;
+  }
+  
+  ion-button {
+    margin-top: 20px;
+  }
+  .table-wrapper {
+    overflow-x: auto; /* Permite desplazamiento horizontal */
+    -webkit-overflow-scrolling: touch; /* Mejora la experiencia de desplazamiento en dispositivos táctiles */
+  }
+  
+  .product-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Asegura que la tabla tenga un ancho mínimo */
+  }
+  
+  .product-table th,
+  .product-table td {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap; /* Evita que el texto se divida en múltiples líneas */
+  }
+  
+  .product-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  
+  

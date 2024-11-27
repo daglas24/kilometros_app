@@ -1,0 +1,65 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Agregar Producto</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      
+      <ion-button expand="full" color="tertiary" routerLink="/tienda">
+        <ion-icon slot="start" name="storefront-outline"></ion-icon>
+        Regresar a Tienda
+      </ion-button>
+      
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="producto.nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Precio</ion-label>
+        <ion-input type="number" [(ngModel)]="producto.precio"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Cantidad</ion-label>
+        <ion-input type="number" [(ngModel)]="producto.cantidad"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Litros</ion-label>
+        <ion-input type="number" [(ngModel)]="producto.litros"></ion-input>
+      </ion-item>
+      <ion-button expand="full" color="primary" (click)="agregarProducto()">Agregar Producto</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Lista de Productos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="table-wrapper">
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Cantidad</th>
+              <th>Litros</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let producto of productos; let i = index">
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.precio }}</td>
+              <td>{{ producto.cantidad }}</td>
+              <td>{{ producto.litros }}</td>
+              <td>
+                <ion-button size="small" color="warning" (click)="editarProducto(i)">Editar</ion-button>
+                <ion-button size="small" color="danger" (click)="eliminarProducto(i)">Eliminar</ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

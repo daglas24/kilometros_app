@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
-    pathMatch: 'full', // La raíz redirige a login
+    pathMatch: 'full',
   },
   {
     path: 'home',
@@ -38,6 +38,11 @@ const routes: Routes = [
       import('./carrito/carrito.module').then((m) => m.CarritoPageModule),
   },
   {
+    path: 'crud1',
+    loadChildren: () =>
+      import('./crud1/crud1.module').then((m) => m.Crud1PageModule),
+  },
+  {
     path: 'notfound',
     loadChildren: () =>
       import('./notfound/notfound.module').then((m) => m.NotfoundPageModule),
@@ -46,6 +51,8 @@ const routes: Routes = [
     path: '**', // Manejo de rutas inexistentes
     redirectTo: 'notfound',
   },
+
+
 ];
 
 @NgModule({
