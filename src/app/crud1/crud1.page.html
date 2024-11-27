@@ -62,4 +62,10 @@
       </div>
     </ion-card-content>
   </ion-card>
+
+  <!-- Botón para exportar los productos a un archivo JSON -->
+  <ion-button expand="full" color="success" (click)="exportarProductos()">
+    <ion-icon slot="start" name="download-outline"></ion-icon>
+    Descargar Productos (JSON)
+  </ion-button>
 </ion-content>
