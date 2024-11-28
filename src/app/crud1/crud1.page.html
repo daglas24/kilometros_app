@@ -7,7 +7,7 @@
       
       <ion-button expand="full" color="tertiary" routerLink="/tienda">
         <ion-icon slot="start" name="storefront-outline"></ion-icon>
-        Regresar a Tienda
+        Ir a Tienda
       </ion-button>
       
       <ion-item>
@@ -35,7 +35,8 @@
       <ion-card-title>Lista de Productos</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div class="table-wrapper">
+      <!-- Contenedor para desplazamiento horizontal -->
+      <div style="overflow-x: auto;">
         <table class="product-table">
           <thead>
             <tr>
@@ -63,9 +64,7 @@
     </ion-card-content>
   </ion-card>
 
-  <!-- Botón para exportar los productos a un archivo JSON -->
   <ion-button expand="full" color="success" (click)="exportarProductos()">
-    <ion-icon slot="start" name="download-outline"></ion-icon>
     Descargar Productos (JSON)
   </ion-button>
 </ion-content>

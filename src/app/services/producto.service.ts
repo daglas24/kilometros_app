@@ -1,42 +1,62 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductoService {
-  private storageKey = 'productos'; // Clave para localStorage
+  private storageKey = 'producto';
+  private apiUrl = 'https://api.jsonbin.io/v3/b/6747e1f1e41b4d34e45bfe06';
+  private apiKey = '';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  // Obtener los productos desde localStorage (si existen)
-  getProductos() {
+  getProductosLocal(): any[] {
     const productos = localStorage.getItem(this.storageKey);
     return productos ? JSON.parse(productos) : [];
   }
 
   // Guardar productos en localStorage
-  saveProductos(productos: any[]) {
+  saveProductosLocal(productos: any[]): void {
     localStorage.setItem(this.storageKey, JSON.stringify(productos));
   }
 
-  // Agregar un producto a la lista
-  agregarProducto(producto: any) {
-    const productos = this.getProductos();
-    productos.push(producto);
-    this.saveProductos(productos);
+  // Obtener productos desde JSONBin
+  getProductosRemoto(): Observable<any> {
+    return this.http.get(this.apiUrl);
   }
 
-  // Editar un producto
-  editarProducto(index: number, producto: any) {
-    const productos = this.getProductos();
-    productos[index] = producto;
-    this.saveProductos(productos);
+  // Guardar productos en JSONBin
+  saveProductosRemoto(productos: any[]): Observable<any> {
+    return this.http.put(
+      this.apiUrl,
+      { record: productos }, // JSONBin espera los datos bajo la clave "record"
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
   }
 
-  // Eliminar un producto
-  eliminarProducto(index: number) {
-    const productos = this.getProductos();
-    productos.splice(index, 1);
-    this.saveProductos(productos);
+  // Obtener productos (local o remoto según preferencia)
+  getProductos(): Promise<any[]> {
+    return this.getProductosRemoto()
+      .toPromise()
+      .then((response: any) => response.record || [])
+      .catch((error) => {
+        console.error('Error al obtener productos remotos:', error);
+        return this.getProductosLocal(); // Fallback al almacenamiento local
+      });
+  }
+
+  // Guardar productos (local y remoto)
+  saveProductos(productos: any[]): void {
+    this.saveProductosLocal(productos); // Guardar local
+    this.saveProductosRemoto(productos).subscribe({
+      next: () => console.log('Productos guardados en JSONBin'),
+      error: (err) => console.error('Error al guardar en JSONBin', err),
+    });
   }
 }

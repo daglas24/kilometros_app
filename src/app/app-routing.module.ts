@@ -39,9 +39,9 @@ const routes: Routes = [
   },
   {
     path: 'crud1',
-    loadChildren: () =>
-      import('./crud1/crud1.module').then((m) => m.Crud1PageModule),
+    loadChildren: () => import('./crud1/crud1.module').then((m) => m.Crud1PageModule),
   },
+  
   {
     path: 'notfound',
     loadChildren: () =>
