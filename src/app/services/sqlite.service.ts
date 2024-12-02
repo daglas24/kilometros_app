@@ -1,18 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { CapacitorSQLite, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SQLiteService {
+export class SQLiteService implements OnInit{
   private db: SQLiteDBConnection | null = null;
   private readonly dbName = 'app_database';
   private isDbInitialized = false;
 
-  constructor() {}
+  constructor() {
+    this.initializeDatabase();
+  }
 
-  // Método para inicializar la base de datos
+  ngOnInit() {
+    this.initializeDatabase();
+  }
   async initializeDatabase() {
     if (Capacitor.isNativePlatform()) {
       const sqlite = CapacitorSQLite;
