@@ -1,6 +1,10 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { GoogleMap } from '@capacitor/google-maps';
+import { SQLiteService } from '../services/sqlite.service';
+import { Router } from '@angular/router';
+
+
 
 export interface PeriodicElement {
   name: string;
@@ -35,7 +39,7 @@ export class InicioPage implements AfterViewInit {
 
   map!: GoogleMap;
 
-  constructor() {}
+  constructor(private sqlite: SQLiteService, private router: Router) {}
 
   async ngAfterViewInit() {
     // Inicializar Google Maps
@@ -82,4 +86,15 @@ export class InicioPage implements AfterViewInit {
       this.videoPlayer.nativeElement.currentTime = 0;
     }
   }
-}
+
+  async cerrarSesion(){
+    const success = await this.sqlite.logout();
+
+    if (success) {
+      // Redirigir al usuario a la página de login
+      this.router.navigate(['/login']);
+    } else {
+      alert('Error al cerrar sesión. Intente de nuevo.');
+    }
+  }
+  }

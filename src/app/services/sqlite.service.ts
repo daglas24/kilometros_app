@@ -4,6 +4,7 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 
 
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,7 +29,7 @@ export class SQLiteService implements OnInit{
 
       // Crear la base de datos
       this.db = await this.sqlite.create({
-        name: 'app_database',
+        name: 'app_database.db',
         location: 'default'
       });
 
@@ -98,16 +99,29 @@ export class SQLiteService implements OnInit{
   // Método para autenticar un usuario
   async authenticateUser(usernameOrEmail: string, password: string): Promise<boolean> {
     if (!this.isDbInitialized) {
-      throw new Error('Database not initialized.');
+      throw new Error('La base de datos no está inicializada.');
     }
-
-    if (!this.db) throw new Error('No database connection.');
-
+  
+    if (!this.db) throw new Error('No hay conexión con la base de datos.');
+  
     const query = `
       SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?;
     `;
     const result = await this.db.executeSql(query, [usernameOrEmail, usernameOrEmail, password]);
-    return Array.isArray(result.values) && result.values.length > 0;
+  
+    // Verifica si hay resultados (usuario encontrado)
+    return result.rows.length > 0;
+  }
+
+
+  async logout() {
+    try {
+      console.log('Sesión cerrada correctamente');
+      return true;
+    } catch (error) {
+      console.error('Error al cerrar sesión', error);
+      return false;
+    }
   }
 }
 

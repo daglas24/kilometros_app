@@ -9,6 +9,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx'; // Asegúrate de usar el import correcto
+import { SQLiteService } from './services/sqlite.service';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,8 +22,10 @@ import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx'; // Asegúrate de u
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    SQLiteService,
     SQLite, // Registra SQLite como proveedor
     provideAnimationsAsync(),
+
   ],
   bootstrap: [AppComponent],
 })
