@@ -1,80 +1,101 @@
 import { Injectable, OnInit } from '@angular/core';
-import { CapacitorSQLite, SQLiteDBConnection } from '@capacitor-community/sqlite';
-import { Capacitor } from '@capacitor/core';
+import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
+
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class SQLiteService implements OnInit{
-  private db: SQLiteDBConnection | null = null;
-  private readonly dbName = 'app_database';
+  private db!: SQLiteObject;
   private isDbInitialized = false;
 
-  constructor() {
-    this.initializeDatabase();
+  constructor(private sqlite: SQLite) {
+    this.init();
   }
 
   ngOnInit() {
-    this.initializeDatabase();
+    this.init();
   }
-  async initializeDatabase() {
-    if (Capacitor.isNativePlatform()) {
-      const sqlite = CapacitorSQLite;
 
-      try {
-        const connection = (await sqlite.createConnection({
-          database: this.dbName,
-          encrypted: false,
-          mode: 'no-encryption',
-          version: 1,
-        })) as unknown as SQLiteDBConnection;
 
-        if (connection) {
-          this.db = connection;
-          await this.db.open();
+  // Método para inicializar la base de datos
+  async init() {
+    try {
+      // Si la base de datos ya está inicializada, no hacemos nada
+      if (this.isDbInitialized) return;
 
-          const query = `
-            CREATE TABLE IF NOT EXISTS users (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              name TEXT NOT NULL,
-              rut INTEGER NOT NULL,
-              username TEXT NOT NULL UNIQUE,
-              email TEXT NOT NULL UNIQUE,
-              password TEXT NOT NULL
-            );
-          `;
-          await this.db.execute(query);
-          this.isDbInitialized = true;
-        } else {
-          throw new Error('No se pudo crear la conexión a la base de datos.');
-        }
-      } catch (error) {
-        console.error('Error al inicializar la base de datos:', error);
-        this.isDbInitialized = false;
-        throw error;
+      // Crear la base de datos
+      this.db = await this.sqlite.create({
+        name: 'app_database',
+        location: 'default'
+      });
+
+      console.log('Base de datos creada');
+      await this.createTable();
+      console.log('Tablas creadas');
+      this.isDbInitialized = true; // Marcar la base de datos como inicializada
+    } catch (error) {
+      console.log('Error al inicializar la base de datos', error);
+      throw new Error('Error al inicializar la base de datos');
+    }
+  }
+
+  // Método para crear las tablas
+  async createTable() {
+    try {
+      await this.db.executeSql(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          rut INTEGER NOT NULL,
+          username TEXT NOT NULL UNIQUE,
+          email TEXT NOT NULL UNIQUE,
+          password TEXT NOT NULL
+        );
+      `);
+      console.log('Tabla "users" creada exitosamente');
+    } catch (error) {
+      console.error('Error al crear la tabla "users":', error);
+    }
+  }
+
+  // Método para agregar un usuario
+  public async addUser(name: string, rut: number, username: string, email: string, password: string): Promise<boolean> {
+    const passwordRegex = /^(?=(?:.*\d){4})(?=(?:.*[a-zA-Z]){3})(?=.*[A-Z]).{8,}$/;
+    
+    // Validar la contraseña
+    if (!passwordRegex.test(password)) {
+      alert('La contraseña no cumple con los requisitos. Debe tener al menos 8 caracteres, una letra mayúscula y 4 números.');
+      return false;
+    }
+
+    try {
+      // Asegurarse de que la base de datos esté inicializada
+      if (!this.isDbInitialized) {
+        throw new Error('La base de datos no está inicializada.');
       }
-    } else {
-      console.warn('SQLite solo está disponible en plataformas nativas.');
-      this.isDbInitialized = false;
+
+      // Definir los datos para insertar
+      const data = [name, rut, username, email, password];
+      
+      // Ejecutar la consulta SQL
+      await this.db.executeSql(
+        `INSERT INTO users (name, rut, username, email, password) VALUES (?, ?, ?, ?, ?)`,
+        data
+      );
+      
+      alert('Usuario registrado correctamente');
+      return true;
+    } catch (error) {
+      console.error('Error al registrar el usuario:', error);
+      alert('Error al registrar el usuario: ' + error);
+      return false;
     }
   }
 
-  // Método para agregar un nuevo usuario
-  async addUser(user: { name: string; rut: number; username: string; email: string; password: string }) {
-    if (!this.isDbInitialized) {
-      throw new Error('Database not initialized.');
-    }
-
-    if (!this.db) throw new Error('No database connection.');
-
-    const query = `
-      INSERT INTO users (name, rut, username, email, password) 
-      VALUES (?, ?, ?, ?, ?);
-    `;
-    await this.db.run(query, [user.name, user.rut, user.username, user.email, user.password]);
-  }
-
-  // Método para autenticar a un usuario
+  // Método para autenticar un usuario
   async authenticateUser(usernameOrEmail: string, password: string): Promise<boolean> {
     if (!this.isDbInitialized) {
       throw new Error('Database not initialized.');
@@ -85,12 +106,8 @@ export class SQLiteService implements OnInit{
     const query = `
       SELECT * FROM users WHERE (username = ? OR email = ?) AND password = ?;
     `;
-    const result = await this.db.query(query, [usernameOrEmail, usernameOrEmail, password]);
+    const result = await this.db.executeSql(query, [usernameOrEmail, usernameOrEmail, password]);
     return Array.isArray(result.values) && result.values.length > 0;
   }
-
-  // Verificar si la base de datos está inicializada
-  get isDatabaseInitialized(): boolean {
-    return this.isDbInitialized;
-  }
 }
+

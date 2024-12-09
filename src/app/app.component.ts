@@ -8,6 +8,6 @@ import { SQLiteService } from './services/sqlite.service';
 })
 export class AppComponent {
   constructor(private sqlite: SQLiteService) {
-    sqlite.initializeDatabase();
+    sqlite.init();
   }
 }

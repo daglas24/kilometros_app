@@ -12,8 +12,8 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     try {
-      // Inicializar la base de datos
-      await this.sqliteService.initializeDatabase();
+      // Asegúrate de que la base de datos se haya inicializado antes de hacer algo
+      await this.sqliteService.init();
     } catch (error) {
       console.error('Error al inicializar la base de datos:', error);
     }
@@ -24,23 +24,20 @@ export class HomePage implements OnInit {
       try {
         const { name, rut, username, email, password } = form.value;
 
-        // Agregar el usuario a la base de datos
-        await this.sqliteService.addUser({
-          name,
-          rut,
-          username,
-          email,
-          password,
-        });
+        // Llamar al servicio para agregar el usuario
+        const success = await this.sqliteService.addUser(name, rut, username, email, password);
 
-        console.log('Usuario agregado:', form.value);
-
-        // Redirigir a la página combustible
-        this.router.navigate(['/combustible']);
+        if (success) {
+          console.log('Usuario agregado:', form.value);
+          this.router.navigate(['/combustible']);
+        } else {
+          alert('Hubo un error al agregar el usuario.');
+        }
       } catch (error) {
         console.error('Error al agregar usuario:', error);
         alert('Error al registrar el usuario. Intente de nuevo.');
       }
+
       form.reset();
     } else {
       console.error('Formulario inválido. Revisa los campos.');

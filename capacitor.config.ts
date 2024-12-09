@@ -2,8 +2,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'KilometrosAPP',
-  webDir: 'www'
+  appName: 'Kilometros_app',
+  webDir: 'www',
 };
 
 export default config;
