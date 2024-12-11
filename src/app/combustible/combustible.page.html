@@ -1,10 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Combustible</ion-title>
+    <ion-title class="animated-title">Combustible</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Bienvenido, {{ username }}!</h2>
-  <ion-button type="submit" (click)="goToInicio()">Ir a Inicio</ion-button>
+  <h2 class="animated-welcome">Bienvenido, {{ username }}!</h2>
+  <ion-button 
+    type="submit" 
+    class="animated-button" 
+    (click)="goToInicio()">
+    Ir a Inicio
+  </ion-button>
 </ion-content>

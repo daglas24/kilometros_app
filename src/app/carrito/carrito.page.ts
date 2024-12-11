@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CarritoService } from '../services/carrito.service';
-import { Product } from 'src/app/services/carrito.service'; // Importamos el tipo Product
+import { Product } from 'src/app/services/carrito.service';
 
 @Component({
   selector: 'app-carrito',
@@ -8,9 +8,17 @@ import { Product } from 'src/app/services/carrito.service'; // Importamos el tip
   styleUrls: ['./carrito.page.scss'],
 })
 export class CarritoPage implements OnInit {
-  cart: Product[] = []; // Especificamos que cart es un array de Product
+  cart: Product[] = [];
   total = 0;
-  showSuccessMessage = false;
+  showPaymentForm = false;
+  paymentSuccess = false;
+
+  paymentDetails = {
+    name: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+  };
 
   constructor(private carritoService: CarritoService) {}
 
@@ -19,38 +27,83 @@ export class CarritoPage implements OnInit {
   }
 
   loadCart() {
-    // Actualiza el carrito y el total
     this.cart = this.carritoService.getCart();
     this.calculateTotal();
   }
 
   calculateTotal() {
-    // Calcula el total llamando al servicio
     this.total = this.carritoService.getTotal();
   }
 
   increaseQuantity(product: Product) {
     this.carritoService.increaseQuantity(product);
-    this.loadCart(); // Actualiza el carrito y el total después de aumentar la cantidad
+    this.loadCart();
   }
 
   decreaseQuantity(product: Product) {
     this.carritoService.decreaseQuantity(product);
-    this.loadCart(); // Actualiza el carrito y el total después de disminuir la cantidad
+    this.loadCart();
   }
 
   removeProduct(product: Product) {
     this.carritoService.removeProduct(product);
-    this.loadCart(); // Actualiza el carrito y el total después de eliminar el producto
-  }
-
-  pay() {
-    this.showSuccessMessage = true;
-    this.carritoService.clearCart();
     this.loadCart();
   }
 
-  resetSuccessMessage() {
-    this.showSuccessMessage = false;
+  openPaymentForm() {
+    this.showPaymentForm = true;
+  }
+
+  closePaymentForm() {
+    this.showPaymentForm = false;
+    this.resetPaymentDetails();
+  }
+
+  resetPaymentDetails() {
+    this.paymentDetails = {
+      name: '',
+      cardNumber: '',
+      expiryDate: '',
+      cvv: '',
+    };
+  }
+
+  validateCardNumber(event: any) {
+    const input = event.target.value;
+    this.paymentDetails.cardNumber = input.replace(/[^0-9]/g, '').slice(0, 16);
+  }
+
+  validateExpiryDate(event: any) {
+    const input = event.target.value;
+    const sanitizedInput = input.replace(/[^0-9/]/g, '').slice(0, 5);
+    const formattedInput = sanitizedInput
+      .replace(/^(\d{2})(\d{1,2})?$/, '$1/$2')
+      .slice(0, 5);
+    this.paymentDetails.expiryDate = formattedInput;
+  }
+
+  validateCVV(event: any) {
+    const input = event.target.value;
+    this.paymentDetails.cvv = input.replace(/[^0-9]/g, '').slice(0, 3);
+  }
+
+  processPayment() {
+    if (
+      this.paymentDetails.name &&
+      this.paymentDetails.cardNumber.length === 16 &&
+      this.paymentDetails.expiryDate.match(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/) &&
+      this.paymentDetails.cvv.length === 3
+    ) {
+      this.paymentSuccess = true;
+      this.showPaymentForm = false;
+      this.carritoService.clearCart();
+      this.loadCart();
+    } else {
+      alert('Por favor, completa todos los campos correctamente.');
+    }
+  }
+
+  closePaymentSuccess() {
+    this.paymentSuccess = false;
   }
 }

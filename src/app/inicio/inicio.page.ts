@@ -46,7 +46,7 @@ export class InicioPage implements AfterViewInit {
     const mapElement = document.getElementById('map') as HTMLElement;
 
     this.map = await GoogleMap.create({
-      id: 'map-inicio', // ID único para el mapa
+      id: 'map-inicio',
       element: mapElement,
       apiKey: 'AIzaSyD2oi1kGOVTlBuWkiU6C_Mw_8vlFa02Jc8',
       config: {

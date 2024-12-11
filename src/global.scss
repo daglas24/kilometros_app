@@ -60,3 +60,14 @@ $app-theme: mat.define-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body.light {
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+}
+
+body.dark {
+  --ion-background-color: #000000;
+  --ion-text-color: #ffffff;
+}
+

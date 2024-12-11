@@ -6,6 +6,11 @@
     </ion-avatar>
     <ion-label class="user-name">{{ username }}</ion-label>
 
+    <ion-button fill="clear" color="dark" slot="end" (click)="toggleTheme()">
+      <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+    </ion-button>
+    
+
     <ion-button fill="clear" color="dark" slot="end" routerLink="/carrito">
       <ion-icon name="cart-outline"></ion-icon>
     </ion-button>

@@ -8,16 +8,16 @@
   <!-- Contenedor para el formulario -->
   <div class="login-container">
     <!-- Imagen decorativa del login -->
-    <img src="assets/img/combustible.png" alt="Login Image" class="login-image" />
+    <img src="assets/img/combustible.png" alt="Login Image" class="login-image animated-image" />
 
     <!-- Formulario de inicio de sesión -->
     <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)" class="login-form">
-      <ion-item>
+      <ion-item class="animated-item">
         <ion-label position="floating">Correo electrónico o usuario</ion-label>
         <ion-input name="username" ngModel required></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item class="animated-item">
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" name="password" ngModel required></ion-input>
       </ion-item>
@@ -26,18 +26,18 @@
         <ion-label>{{ passwordError }}</ion-label>
       </ion-item>
 
-      <ion-button expand="full" type="submit" [disabled]="!loginForm.form.valid">
+      <ion-button class="animated-button" expand="full" type="submit" [disabled]="!loginForm.form.valid">
         Iniciar Sesión
       </ion-button>
 
       <br />
 
-      <a class="crear" routerLink="/home"><strong>Crear cuenta</strong></a>
+      <a class="crear animated-item" routerLink="/home"><strong>Crear cuenta</strong></a>
     </form>
   </div>
 
   <!-- Botón para abrir el modal -->
-  <ion-button id="modal-trigger">Información APP</ion-button>
+  <ion-button id="modal-trigger" class="animated-button">Información APP</ion-button>
 
   <!-- Definición del Modal -->
   <ion-modal trigger="modal-trigger" #modal>
@@ -50,9 +50,21 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        Kilómetros es una innovadora aplicación diseñada para facilitar el seguimiento y la gestión de tus desplazamientos. Ideal para usuarios que buscan llevar un control detallado de sus recorridos, ya sea para propósitos personales, profesionales o deportivos.
+      <ion-content class="ion-padding animated-modal">
+        Kilómetros es una innovadora aplicación diseñada para facilitar la creación y gestión de productos. Los usuarios pueden añadir productos a su catálogo, los cuales serán revisados y aprobados por el desarrollador de la aplicación. La sucursal principal está ubicada en San Francisco:
+
+        Coordenadas:
+        
+        Latitud: 37.7749
+        Longitud: -122.4194
+        Con Kilómetros, puedes ordenar y pagar productos de manera sencilla, además de añadir nuevos artículos al catálogo. Todo esto con un sistema eficiente y seguro que asegura una experiencia fluida y cómoda para los usuarios. cual quier cambio de contraseña o consulta enviar un correa a: kilometros_app&#64;soporte.cl
       </ion-content>
     </ng-template>
   </ion-modal>
 </ion-content>
+
+
+<ion-button routerLink="/combustible" expand="block" color="primary">
+  Ir a Combustible
+</ion-button>
+

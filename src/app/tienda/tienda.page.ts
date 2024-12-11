@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { NavController } from '@ionic/angular';
-import { CarritoService, Product } from 'src/app/services/carrito.service'; // Importamos el tipo Product
-
+import { CarritoService, Product } from 'src/app/services/carrito.service';
 
 @Component({
   selector: 'app-tienda',
@@ -11,22 +10,35 @@ import { CarritoService, Product } from 'src/app/services/carrito.service'; // I
 })
 export class TiendaPage implements OnInit {
   username: string | null = '';
+  isDarkMode: boolean = false; // Estado inicial del tema
 
   constructor(
     private authService: AuthService,
     private carritoService: CarritoService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private renderer: Renderer2 // Para modificar la clase del body
   ) { 
     this.username = this.authService.getUsername();
+    this.isDarkMode = localStorage.getItem('theme') === 'dark'; // Leer el estado guardado
+    this.applyTheme(); // Aplicar el tema al cargar la página
   }
 
   ngOnInit() {}
 
   addToCart(name: string, price: number, image: string) {
-    // Añadimos el producto al carrito
-    const product: Product = { name, price, image, quantity: 1 }; // Definimos el tipo Product
+    const product: Product = { name, price, image, quantity: 1 };
     this.carritoService.addProduct(product);
-    // Navegamos al carrito después de añadir el producto
     this.navCtrl.navigateForward('/carrito');
+  }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light'); // Guardar el estado
+    this.applyTheme(); // Aplicar el tema seleccionado
+  }
+
+  applyTheme() {
+    const theme = this.isDarkMode ? 'dark' : 'light';
+    this.renderer.setAttribute(document.body, 'class', theme); // Cambiar la clase del body
   }
 }
